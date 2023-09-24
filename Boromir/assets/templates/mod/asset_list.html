@@ -1,0 +1,73 @@
+{% extends 'base.html' %}
+{% load static %} 
+
+{% block content %}
+  <div class="container mx-auto px-4">
+    <!-- Asset Creation Form -->
+    <div class="mb-4">
+      <form method="post">
+        {% csrf_token %}
+        <input type="text" name="asset_name" placeholder="Asset Name" class="border p-2 rounded">
+        <input type="text" name="asset_type" placeholder="Asset Type" class="border p-2 rounded">
+        <button type="submit" class="bg-black text-white p-2 rounded">Create Asset</button>
+      </form>
+    </div>
+
+    <!-- Asset List -->
+    <table class="min-w-full bg-white border">
+      <thead>
+        <tr>
+          <th class="border">Asset ID</th>
+          <th class="border">Asset Name</th>
+          <th class="border">Asset Type</th>
+          <th class="border">Asset Status</th>
+          <th class="border">Unique URL</th>
+          <th class="border">Permissions Required</th>
+          <th class="border">Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for asset in assets %}
+          <tr id="row_{{ asset.id }}">
+            <td class="border">{{ asset.id }}</td>
+            <td class="border editable" data-field="asset_name" data-id="{{ asset.id }}">{{ asset.asset_name }}</td>
+            <td class="border editable" data-field="asset_type" data-id="{{ asset.id }}">{{ asset.asset_type }}</td>
+            <td class="border editable" data-field="asset_status" data-id="{{ asset.id }}">{{ asset.asset_status }}</td>
+            <td class="border editable" data-field="unique_url" data-id="{{ asset.id }}">{{ asset.unique_url }}</td>
+            <td class="border editable" data-field="permissions_required" data-id="{{ asset.id }}">{{ asset.permissions_required }}</td>
+            <td class="border">
+              <button class="bg-black text-white p-1 rounded edit-button" data-id="{{ asset.id }}">Edit</button>
+              <button class="bg-black text-white p-1 rounded save-button hidden" data-id="{{ asset.id }}">Save</button>
+              <button class="bg-black text-white p-1 rounded delete-button" data-id="{{ asset.id }}">Delete</button>
+            </td>
+            <td class="py-2 px-4 border">
+              <a href="{% url 'asset_detail' asset.id %}" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+                  Details
+              </a>
+          </td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <script>
+    const csrfToken = '{{ csrf_token }}';
+    document.addEventListener('DOMContentLoaded', function() {
+      // Capture the time when the page is loaded
+      const startTime = new Date().toISOString();
+      document.getElementById("start_time").value = startTime;
+    
+      // Attach event to form submission
+      document.getElementById("report-form").addEventListener("submit", function() {
+        // Capture the time when the form is submitted
+        const endTime = new Date().toISOString();
+        document.getElementById("end_time").value = endTime;
+      });
+    });
+    
+  </script>
+{% endblock %}
+
+{% block extra_js %}
+  <script src="{% static 'asset_management.js' %}"></script>
+{% endblock %}

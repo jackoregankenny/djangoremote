@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mx-auto mt-10 px-6">
+    <h1 class="text-4xl mb-6 text-center font-semibold text-gray-800">Asset Detail: {{ asset.asset_name }}</h1>
+    
+    <div class="mb-8 p-4 rounded-lg bg-white shadow-lg">
+        <h2 class="text-2xl mb-4 text-gray-700">Asset Information</h2>
+        <p class="mb-2 text-lg text-gray-600"><span class="font-semibold">Name:</span> {{ asset.asset_name }}</p>
+        <p class="mb-2 text-lg text-gray-600"><span class="font-semibold">Type:</span> {{ asset.asset_type }}</p>
+        <p class="mb-2 text-lg text-gray-600"><span class="font-semibold">Status:</span> {{ asset.asset_status }}</p>
+        <p class="mb-2 text-lg text-gray-600"><span class="font-semibold">Unique URL:</span> {{ asset.unique_url }}</p>
+    </div>
+
+    <div class="p-4 rounded-lg bg-white shadow-lg">
+        <h2 class="text-2xl mb-4 text-gray-700">Maintenance Reports</h2>
+        <table class="min-w-full bg-white">
+            <thead class="bg-gray-200">
+                <tr>
+                    <th class="py-2 px-4 border text-left">Start Time</th>
+                    <th class="py-2 px-4 border text-left">End Time</th>
+                    <th class="py-2 px-4 border text-left">Checkout Time</th>
+                    <th class="py-2 px-4 border text-left">Classification</th>
+                    <th class="py-2 px-4 border text-left">Anomalies</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for report in maintenance_reports %}
+                <tr class="hover:bg-gray-100">
+                    <td class="py-2 px-4 border text-gray-600">{{ report.maintenance_start_time }}</td>
+                    <td class="py-2 px-4 border text-gray-600">{{ report.maintenance_end_time }}</td>
+                    <td class="py-2 px-4 border text-gray-600">{{ report.maintenance_checkout_time }}</td>
+                    <td class="py-2 px-4 border text-gray-600">{{ report.maintenance_classification }}</td>
+                    <td class="py-2 px-4 border text-gray-600">{{ report.anomalies_flagged }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

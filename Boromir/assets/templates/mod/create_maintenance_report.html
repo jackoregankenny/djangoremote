@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="container mx-auto my-5 p-5">
+    <h1 class="text-3xl mb-5">Create Maintenance Report</h1>
+
+    <!-- Display the asset name here -->
+    {% if asset_name %}
+      <div class="text-2xl font-bold mb-4 p-3 rounded bg-gray-200">
+        Maintaining Asset: {{ asset_name }}
+      </div>
+    {% endif %}
+    
+    <form id="maintenance-form" method="post" class="space-y-4">
+      {% csrf_token %}
+
+    
+      {% for field in form %}
+      <div class="flex flex-col mb-4">
+        <label for="{{ field.id_for_label }}" class="text-lg font-medium">{{ field.label }}</label>
+    
+        {% if field.name == "maintenance_end_time" %}
+      <!-- Set the field as read-only -->
+      <input type="{{ field.field.widget.input_type }}" name="{{ field.name }}" id="{{ field.id_for_label }}" class="border rounded p-2" value="{{ field.value|default_if_none:'' }}" readonly>
+        
+        {% elif field.name == "report_description" %}
+          <!-- Style for large text field -->
+          <textarea name="{{ field.name }}" id="{{ field.id_for_label }}" class="border rounded p-2 h-32"></textarea>
+
+        {% elif field.name == "anomalies_flagged" or field.name == "parts_used" %}
+          <!-- Style for checkboxes -->
+          <div class="flex flex-row space-x-4">
+            <input type="{{ field.field.widget.input_type }}" name="{{ field.name }}" id="{{ field.id_for_label }}" class="border rounded p-2" value="{{ field.value|default_if_none:'' }}" {% if field.field.widget.attrs.readonly %} readonly {% endif %}>
+          </div>
+          
+        {% else %}
+          <!-- Default style -->
+          <input type="{{ field.field.widget.input_type }}" name="{{ field.name }}" id="{{ field.id_for_label }}" class="border rounded p-2" value="{{ field.value|default_if_none:'' }}" {% if field.field.widget.attrs.readonly %} readonly {% endif %}>
+        {% endif %}
+    
+        {% if field.help_text %}
+          <small class="text-gray-500">{{ field.help_text }}</small>
+        {% endif %}
+        {% for error in field.errors %}
+          <small class="text-red-500">{{ error }}</small>
+        {% endfor %}
+      </div>
+    {% endfor %}
+    
+    
+      <button type="submit" class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
+        Create Report
+      </button>
+    </form>
+  </div>
+{% endblock %}
